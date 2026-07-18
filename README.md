@@ -90,16 +90,70 @@ npm start
 
 ## 📁 Repository Structure
 
-- `/backend` - Spring Boot Application
-  - `/controller` - REST API Endpoints
-  - `/model` - Entities and DTOs (Job, Student, MatchResult, ScoreBreakdown)
-  - `/service` - Core business logic (`MatchingService.java`)
-  - `/config` - Data seeding and CORS configuration
-- `/frontend` - Angular 17 Application
-  - `/src/app/pages` - Dashboard, Job Detail, Profile, and Compare Views
-  - `/src/app/components` - Reusable UI (Match Card, Score Ring, Radar Chart)
-  - `/src/app/services` - HTTP clients communicating with backend
-  - `/src/styles.css` - Global Obsidian UI Design System
+```text
+TrueRank/
+├── backend/                              # Spring Boot 3.2 Application
+│   ├── src/main/java/com/truerank/
+│   │   ├── TrueRankApplication.java      # Main Application Entry Point
+│   │   ├── config/
+│   │   │   ├── CorsConfig.java           # Cross-Origin configuration for frontend integration
+│   │   │   └── DataInitializer.java      # Auto-seeds 5 Students and 15 Jobs into H2 DB
+│   │   ├── controller/                   # REST API Endpoints
+│   │   │   ├── JobController.java        # /api/jobs endpoints
+│   │   │   ├── MatchController.java      # /api/matches endpoints (Explainable AI Engine)
+│   │   │   └── StudentController.java    # /api/students endpoints (Profiles & Applications)
+│   │   ├── model/                        # Entities & Data Transfer Objects (DTOs)
+│   │   │   ├── Job.java                  # Job posting JPA Entity
+│   │   │   ├── Student.java              # Student profile JPA Entity
+│   │   │   ├── MatchResult.java          # Aggregated match score and rank DTO
+│   │   │   └── ScoreBreakdown.java       # Granular explainability metrics DTO
+│   │   ├── repository/                   # Spring Data JPA Interfaces
+│   │   │   ├── JobRepository.java
+│   │   │   └── StudentRepository.java
+│   │   └── service/                      # Core Business Logic
+│   │       ├── JobService.java
+│   │       ├── StudentService.java
+│   │       └── MatchingService.java      # The brains of the Match Engine algorithm
+│   ├── src/main/resources/
+│   │   └── application.properties        # H2 Database & Hibernate configurations
+│   ├── Dockerfile                        # Containerization for production deployment
+│   └── pom.xml                           # Maven dependencies (Spring Web, JPA, H2)
+│
+├── frontend/                             # Angular 17 SPA (Standalone Components)
+│   ├── src/app/
+│   │   ├── components/                   # Reusable Glassmorphism UI Components
+│   │   │   ├── confidence-badge/         # "High/Medium/Low" algorithm confidence
+│   │   │   ├── match-card/               # The main job match card in the dashboard
+│   │   │   ├── navbar/                   # Sticky top navigation
+│   │   │   ├── particle-bg/              # Canvas-based background animation
+│   │   │   ├── radar-chart/              # 5-axis Canvas match visualization
+│   │   │   ├── score-breakdown/          # Detailed text-based match logic
+│   │   │   ├── score-dna-strip/          # Horizontal color-coded score proportion bar
+│   │   │   ├── score-ring/               # Animated SVG circular progress ring
+│   │   │   └── skill-pills/              # Green/Red/Yellow skill status tags
+│   │   ├── pages/                        # Main Application Routes
+│   │   │   ├── compare/                  # Side-by-side job comparison tool
+│   │   │   ├── dashboard/                # Landing page with ranked grid & filters
+│   │   │   ├── job-detail/               # Deep-dive into a specific job match
+│   │   │   └── profile/                  # Student data entry (Skills, GPA, Auth)
+│   │   ├── models/                       # TypeScript Interfaces
+│   │   │   ├── job.model.ts
+│   │   │   ├── match.model.ts
+│   │   │   └── student.model.ts
+│   │   ├── services/                     # HTTP Clients
+│   │   │   ├── job.service.ts
+│   │   │   ├── match.service.ts
+│   │   │   └── student.service.ts
+│   │   ├── app.routes.ts                 # Angular Router configuration
+│   │   └── app.component.ts              # Root layout shell
+│   ├── src/environments/                 # API Configuration
+│   │   ├── environment.ts                # Localhost configuration
+│   │   └── environment.prod.ts           # Production Render backend URL
+│   ├── src/styles.css                    # "Obsidian" Global Design System CSS
+│   ├── vercel.json                       # SPA routing configuration for Vercel
+│   └── angular.json                      # Angular CLI workspace configuration
+└── README.md                             # You are here!
+```
 
 ---
 <div align="center">
