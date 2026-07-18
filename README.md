@@ -163,6 +163,26 @@ TrueRank/
 └── README.md                             # Global documentation
 ```
 
+## 👤 Demo Profiles & Test Accounts
+
+To make evaluation easy, the database is pre-seeded with multiple student profiles representing different visas, GPAs, and skill sets.
+
+By default, the live frontend runs in the context of the primary test student:
+* **Default Student:** **Arjun Mehta** (ID: 1)
+  * **University:** Stanford University (CS)
+  * **GPA:** 3.85
+  * **Work Authorization:** F1-OPT (Requires Sponsorship)
+  * **Skills:** Java, Spring Boot, Angular, TypeScript, Python, React, SQL, Docker, Git, REST APIs
+  * **Strong Skills:** Java, Angular, Spring Boot
+
+### Additional Pre-seeded Students for Testing:
+You can test different scoring profiles by navigating to the **Profile** tab and changing the details (such as switching work authorization to US Citizen, reducing GPA, or changing skills). The engine will recalculate all match scores instantly.
+
+1. **Emily Chen** (ID: 2) — MIT (Data Science)
+   * GPA: 3.92 | US Citizen | Skills: Python, TensorFlow, PyTorch, SQL, Pandas
+2. **Rahul Sharma** (ID: 3) — UC Berkeley (EECS)
+   * GPA: 3.45 | F1-CPT (Internship Visa) | Skills: C++, Python, MATLAB, Linux
+
 ---
 
 ## 📊 Database Schema & Auto-Seeding
