@@ -1,171 +1,107 @@
-# TrueRank — Explainable Job Matching Platform
+# 🎯 TrueRank — Explainable AI Job Matching Platform
 
-> **"See exactly why you matched."**
-
-TrueRank is an explainable job/internship matching platform for students. It ranks postings by skill overlap, GPA, and work-authorization fit, with a transparent breakdown of **why** each match scored the way it did.
-
-Built for **CredX Hiring Challenge 2.0** — Problem Statement 1.
+<div align="center">
+  <h3><strong><a href="https://tr-kappa-vert.vercel.app/dashboard">🚀 View Live Demo: tr-kappa-vert.vercel.app</a></strong></h3>
+  <p><em>Built for the CredX Hiring Challenge 2.0 (Problem Statement 1)</em></p>
+</div>
 
 ---
 
-## 🎯 Key Features
+## 📖 Overview
 
-| Feature | Description |
-|---------|-------------|
-| **Matching Engine** | Weighted scoring: 40% skill overlap (Jaccard similarity), 30% GPA fit, 30% work authorization compatibility |
-| **Explainable Scores** | Natural-language explanations for every dimension — "You match 4/5 required skills" |
-| **Score DNA Strip** | Horizontal bar showing proportional contribution of each dimension |
-| **Animated Score Rings** | SVG circular progress with gradient strokes |
-| **Radar Chart** | Canvas-based 5-axis visualization |
-| **Skill Gap Analysis** | ✅ matched, ❌ missing, ⭐ bonus skills with actionable tips |
-| **Side-by-Side Compare** | Compare 2-3 jobs with visual diff highlighting |
-| **Profile Management** | Edit skills, GPA, work-auth with live completeness indicator |
-| **Search & Filters** | By role type, company, skills, work mode (remote/hybrid/onsite) |
+TrueRank is an **explainable job and internship matching platform** built for students. Instead of just showing a filtered list of jobs, TrueRank uses a weighted scoring algorithm to rank postings based on **Skill Overlap, GPA, and Work Authorization compatibility**. 
 
-## 🛠️ Tech Stack
+The core philosophy of TrueRank is **Transparency**. Every match comes with a detailed breakdown explaining exactly *why* a student matched with a role, what skills they are missing, and how they can improve their profile.
 
-| Layer | Technology |
-|-------|------------|
-| **Frontend** | Angular 17 (standalone components, TypeScript) |
-| **Backend** | Spring Boot 3.2 (Java 17+, REST APIs) |
-| **Database** | H2 In-Memory (auto-seeded with demo data) |
-| **API Docs** | SpringDoc OpenAPI / Swagger UI |
-| **Design** | Custom CSS "Obsidian" design system (glassmorphism, dark theme) |
+## ✨ Key Features (Hackathon Requirements Met)
 
-## 📁 Project Structure
+✅ **Student Profile Creation:** Manage skills, GPA, Work Authorization, and Resume links.  
+✅ **Job Listings:** Browse detailed job postings with role, location, remote/hybrid mode, and sponsorship availability.  
+✅ **Explainable Matching Engine:** Calculates a Match Score (0-100%) and explains the breakdown.  
+✅ **Advanced Filters:** Filter by Role, Location, Work Mode (Remote/Hybrid/Onsite), Visa Sponsorship, and 80%+ Matches.  
+✅ **Match Score Indicators:** Visual Score Rings, Radar Charts, and Score DNA Strips.  
+✅ **Application Tracking (Stretch Goal):** Students can apply to jobs and see a `✓ Applied` indicator on their dashboard.  
+✅ **Side-by-Side Compare (Bonus):** Compare 2-3 jobs visually to see which is a better fit.  
 
-```
-Credx/
-├── backend/                    # Spring Boot 3 API
-│   ├── src/main/java/com/truerank/
-│   │   ├── TrueRankApplication.java    # Main entry
-│   │   ├── config/
-│   │   │   ├── CorsConfig.java         # CORS for Angular
-│   │   │   └── DataInitializer.java    # Seeds 5 students + 15 jobs
-│   │   ├── controller/
-│   │   │   ├── StudentController.java  # /api/students
-│   │   │   ├── JobController.java      # /api/jobs
-│   │   │   └── MatchController.java    # /api/matches
-│   │   ├── model/
-│   │   │   ├── Student.java            # Student entity
-│   │   │   ├── Job.java                # Job entity
-│   │   │   ├── MatchResult.java        # Match result DTO
-│   │   │   └── ScoreBreakdown.java     # Explainability DTO
-│   │   ├── repository/                 # JPA repositories
-│   │   └── service/
-│   │       ├── MatchingService.java    # Core algorithm
-│   │       ├── StudentService.java
-│   │       └── JobService.java
-│   ├── src/test/                       # Unit tests
-│   └── pom.xml
-│
-├── frontend/                   # Angular 17 SPA
-│   ├── src/app/
-│   │   ├── components/         # 8 shared components
-│   │   │   ├── navbar/         # Glassmorphism navigation
-│   │   │   ├── score-ring/     # Animated SVG score ring
-│   │   │   ├── radar-chart/    # Canvas radar visualization
-│   │   │   ├── skill-pills/    # Color-coded skill tags
-│   │   │   ├── score-dna-strip/# Score composition bar
-│   │   │   ├── match-card/     # Match result card
-│   │   │   ├── score-breakdown/# Detailed explanation panel
-│   │   │   ├── confidence-badge/# Algorithm confidence
-│   │   │   └── particle-bg/    # Canvas particle animation
-│   │   ├── pages/              # 4 page components
-│   │   │   ├── dashboard/      # Hero + ranked match grid
-│   │   │   ├── profile/        # Profile editor
-│   │   │   ├── job-detail/     # Full match breakdown
-│   │   │   └── compare/        # Side-by-side comparison
-│   │   ├── services/           # HTTP API services
-│   │   └── models/             # TypeScript interfaces
-│   └── src/styles.css          # Obsidian design system
-│
-└── README.md
-```
+---
 
-## 🚀 Getting Started
+## 🛠️ Technology Stack
+
+**Frontend (Angular 17)**
+- Standalone Components & Reactive Forms
+- Custom "Obsidian" Glassmorphism UI Design System (CSS3 Variables, CSS Grid/Flexbox)
+- Custom Pipes for Match-Score formatting
+- `vercel.json` for SPA routing
+
+**Backend (Spring Boot 3.2)**
+- Java 17 + REST APIs
+- Spring Data JPA
+- Scoring Service (Runs algorithm logic in-memory)
+- Configured for Docker-based deployment
+
+**Database & Deployment**
+- **H2 In-Memory Database:** Auto-seeded on startup with 5 Students and 15 Jobs for instant testing.
+- **Frontend Hosting:** Vercel
+- **Backend Hosting:** Render (Dockerized)
+
+---
+
+## 🧠 The Matching Engine Logic
+
+The algorithm uses a rule-based weighting system:
+`TotalScore = (SkillScore × 0.40) + (GPAScore × 0.30) + (AuthScore × 0.30)`
+
+1. **Skill Score (40% Weight):**
+   - Uses **Jaccard Similarity** `(|student ∩ required| / |student ∪ required|)`
+   - Grants a **30% Bonus** for matching "Preferred/Nice-to-have" skills.
+2. **GPA Score (30% Weight):**
+   - Meets/Exceeds Requirement = 100%
+   - Within 0.3 points = 60-99% (scaled linearly)
+   - Within 0.5 points = 30-59%
+3. **Work Authorization Score (30% Weight):**
+   - US Citizen or Exact Match = 100%
+   - Sponsorship Available & Needed = 70%
+   - No Sponsorship & Needed = 10% (Hard penalty)
+
+---
+
+## 💻 Local Development Setup
 
 ### Prerequisites
-- **Java 17+** (JDK)
-- **Maven 3.6+**
-- **Node.js 18+** and **npm 9+**
+- **Java 17+** and **Maven 3.6+**
+- **Node.js 18+** and **Angular CLI 17+**
 
 ### 1. Start the Backend
-
 ```bash
 cd backend
 mvn spring-boot:run
 ```
-
-The API starts at **http://localhost:8080**
-- Swagger UI: http://localhost:8080/swagger-ui.html
-- H2 Console: http://localhost:8080/h2-console
+*The backend API will start at `http://localhost:8080/api`*
 
 ### 2. Start the Frontend
-
 ```bash
 cd frontend
 npm install
-ng serve
+npm start
 ```
-
-The app opens at **http://localhost:4200**
-
-## 📊 Matching Algorithm
-
-```
-TotalScore = (SkillScore × 0.40) + (GPAScore × 0.30) + (AuthScore × 0.30)
-```
-
-### Skill Score (0–100)
-- **Jaccard Similarity**: `|studentSkills ∩ requiredSkills| / |studentSkills ∪ requiredSkills|`
-- **Preferred Bonus**: 30% weight for matching nice-to-have skills
-- **Output**: Matched ✅, missing ❌, and bonus ⭐ skills listed
-
-### GPA Score (0–100)
-- ≥ requirement → 100%
-- Within 0.3 → 60-99% (linear)
-- Within 0.5 → 30-59%
-- Below → 0-29%
-
-### Work Authorization Score (0–100)
-- Exact match → 100%
-- US Citizen (any requirement) → 95%
-- Sponsorship available + needed → 70%
-- No sponsorship + needed → 10%
-
-### Confidence Level
-Based on profile completeness:
-- **HIGH**: 80%+ profile complete
-- **MEDIUM**: 50-80%
-- **LOW**: < 50%
-
-## 🧪 API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/students` | List all students |
-| `GET` | `/api/students/{id}` | Get student by ID |
-| `PUT` | `/api/students/{id}` | Update student profile |
-| `GET` | `/api/jobs` | List all jobs |
-| `GET` | `/api/jobs/filter?type=INTERNSHIP` | Filter jobs |
-| `GET` | `/api/matches/{studentId}` | Get ranked matches |
-| `GET` | `/api/matches/{studentId}/job/{jobId}` | Detailed match |
-| `GET` | `/api/matches/{studentId}/compare?jobIds=1,2,3` | Compare jobs |
-
-## 🧪 Running Tests
-
-```bash
-cd backend
-mvn test
-```
-
-## 👤 Demo Data
-
-Pre-seeded with 5 students and 15 jobs from Google, Microsoft, Stripe, Meta, Airbnb, Amazon, Netflix, Spotify, Tesla, Figma, CrowdStrike, Uber, Databricks, Adobe, and Twilio.
-
-Default student: **Arjun Mehta** (ID: 1) — CS @ Stanford, GPA 3.85, F1-OPT
+*The frontend will open at `http://localhost:4200`*
 
 ---
 
-**Built with ❤️ for CredX Hiring Challenge 2.0**
+## 📁 Repository Structure
+
+- `/backend` - Spring Boot Application
+  - `/controller` - REST API Endpoints
+  - `/model` - Entities and DTOs (Job, Student, MatchResult, ScoreBreakdown)
+  - `/service` - Core business logic (`MatchingService.java`)
+  - `/config` - Data seeding and CORS configuration
+- `/frontend` - Angular 17 Application
+  - `/src/app/pages` - Dashboard, Job Detail, Profile, and Compare Views
+  - `/src/app/components` - Reusable UI (Match Card, Score Ring, Radar Chart)
+  - `/src/app/services` - HTTP clients communicating with backend
+  - `/src/styles.css` - Global Obsidian UI Design System
+
+---
+<div align="center">
+  <i>Developed for CredX Hiring Challenge 2.0</i>
+</div>
