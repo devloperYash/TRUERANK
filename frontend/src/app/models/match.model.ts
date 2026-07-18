@@ -15,6 +15,7 @@ export interface MatchResult {
   matchSummary: string;
   rank: number;
   scoreTier: ScoreTier;
+  applied?: boolean;
 }
 
 /**

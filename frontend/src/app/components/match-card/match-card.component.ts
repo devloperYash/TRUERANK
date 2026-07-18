@@ -34,8 +34,19 @@ import { ConfidenceBadgeComponent } from '../confidence-badge/confidence-badge.c
                     [style.borderColor]="getTypeColor(match.job.jobType) + '30'">
                 {{ getTypeLabel(match.job.jobType) }}
               </span>
+              <span class="job-type-badge" *ngIf="match.job.workMode"
+                    style="background: rgba(255,255,255,0.08); color: #a1a1aa; border-color: rgba(255,255,255,0.1);">
+                {{ match.job.workMode === 'REMOTE' ? '🏠' : match.job.workMode === 'HYBRID' ? '🔄' : '🏢' }}
+                {{ match.job.workMode }}
+              </span>
             </div>
             <h3 class="job-title">{{ match.job.title }}</h3>
+
+            <!-- Why-Matched Tooltip -->
+            <p class="match-reason" *ngIf="match.matchSummary">
+              💡 {{ match.matchSummary }}
+            </p>
+
             <div class="meta-row">
               <span class="meta-item">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -83,6 +94,7 @@ import { ConfidenceBadgeComponent } from '../confidence-badge/confidence-badge.c
           <div class="card-footer">
             <tr-confidence-badge [level]="match.confidence"></tr-confidence-badge>
             <div class="card-actions">
+              <span class="applied-badge" *ngIf="match.applied">✓ Applied</span>
               <button class="btn btn-ghost btn-sm" (click)="toggleCompare($event)">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="18" y1="20" x2="18" y2="10"/>
@@ -266,6 +278,32 @@ import { ConfidenceBadgeComponent } from '../confidence-badge/confidence-badge.c
     @media (max-width: 640px) {
       .card-body { flex-direction: column-reverse; }
       .card-score { align-self: flex-end; }
+    }
+
+    .match-reason {
+      font-size: 0.75rem;
+      color: #a1a1aa;
+      margin: 4px 0 8px;
+      padding: 6px 10px;
+      background: rgba(124, 58, 237, 0.08);
+      border-radius: 6px;
+      border-left: 2px solid #7c3aed;
+      line-height: 1.4;
+    }
+
+    .applied-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
   `]
 })

@@ -79,22 +79,30 @@ import { ParticleBgComponent } from '../../components/particle-bg/particle-bg.co
                     (click)="setTypeFilter('INTERNSHIP')">Internships</button>
             <button class="filter-pill" [class.active]="activeTypeFilter === 'FULL_TIME'"
                     (click)="setTypeFilter('FULL_TIME')">Full-Time</button>
+            <button class="filter-pill" [class.active]="activeTypeFilter === 'PART_TIME'"
+                    (click)="setTypeFilter('PART_TIME')">Part-Time</button>
+            <button class="filter-pill" [class.active]="activeTypeFilter === 'CO_OP'"
+                    (click)="setTypeFilter('CO_OP')">Co-Op</button>
           </div>
 
           <div class="filter-pills">
             <button class="filter-pill" [class.active]="activeModeFilter === 'all'"
                     (click)="setModeFilter('all')">All Modes</button>
             <button class="filter-pill" [class.active]="activeModeFilter === 'REMOTE'"
-                    (click)="setModeFilter('REMOTE')">Remote</button>
+                    (click)="setModeFilter('REMOTE')">🏠 Remote</button>
             <button class="filter-pill" [class.active]="activeModeFilter === 'HYBRID'"
-                    (click)="setModeFilter('HYBRID')">Hybrid</button>
+                    (click)="setModeFilter('HYBRID')">🔄 Hybrid</button>
             <button class="filter-pill" [class.active]="activeModeFilter === 'ONSITE'"
-                    (click)="setModeFilter('Onsite')">Onsite</button>
+                    (click)="setModeFilter('ONSITE')">🏢 Onsite</button>
           </div>
 
           <div class="filter-pills">
+            <button class="filter-pill" [class.active]="sponsorFilter === 'all'"
+                    (click)="setSponsorFilter('all')">Any Visa</button>
+            <button class="filter-pill" [class.active]="sponsorFilter === 'yes'"
+                    (click)="setSponsorFilter('yes')">✓ Sponsors Visa</button>
             <button class="filter-pill" [class.active]="showOnlyExcellent"
-                    (click)="toggleExcellent()">80%+ Matches</button>
+                    (click)="toggleExcellent()">🏆 80%+ Matches</button>
           </div>
 
           <div class="sort-control">
@@ -439,6 +447,7 @@ export class DashboardComponent implements OnInit {
   searchQuery = '';
   activeTypeFilter = 'all';
   activeModeFilter = 'all';
+  sponsorFilter = 'all';
   showOnlyExcellent = false;
   sortBy = 'score';
   selectedForCompare: MatchResult[] = [];
@@ -460,19 +469,40 @@ export class DashboardComponent implements OnInit {
     this.isLoading = true;
 
     this.studentService.getById(this.studentId).subscribe({
-      next: (student) => { this.student = student; },
-      error: (err) => console.error('Failed to load student:', err),
-    });
-
-    this.matchService.getMatches(this.studentId).subscribe({
-      next: (matches) => {
-        this.matches = matches;
-        this.filteredMatches = [...matches];
-        this.isLoading = false;
+      next: (student) => {
+        this.student = student;
+        // Load matches after student so we can stamp applied status
+        this.matchService.getMatches(this.studentId).subscribe({
+          next: (matches) => {
+            const appliedIds = new Set(student.appliedJobIds || []);
+            this.matches = matches.map(m => ({
+              ...m,
+              applied: appliedIds.has(m.job.id),
+            }));
+            this.filteredMatches = [...this.matches];
+            this.sortMatches();
+            this.isLoading = false;
+          },
+          error: (err) => {
+            console.error('Failed to load matches:', err);
+            this.isLoading = false;
+          },
+        });
       },
       error: (err) => {
-        console.error('Failed to load matches:', err);
-        this.isLoading = false;
+        console.error('Failed to load student:', err);
+        // Still attempt to load matches without applied status
+        this.matchService.getMatches(this.studentId).subscribe({
+          next: (matches) => {
+            this.matches = matches;
+            this.filteredMatches = [...matches];
+            this.isLoading = false;
+          },
+          error: (e) => {
+            console.error('Failed to load matches:', e);
+            this.isLoading = false;
+          },
+        });
       },
     });
   }
@@ -494,6 +524,11 @@ export class DashboardComponent implements OnInit {
     // Filter by excellent
     if (this.showOnlyExcellent) {
       result = result.filter(m => m.totalScore >= 80);
+    }
+
+    // Filter by sponsorship
+    if (this.sponsorFilter === 'yes') {
+      result = result.filter(m => m.job.sponsorshipAvailable);
     }
 
     // Filter by search
@@ -524,6 +559,15 @@ export class DashboardComponent implements OnInit {
   toggleExcellent(): void {
     this.showOnlyExcellent = !this.showOnlyExcellent;
     this.filterMatches();
+  }
+
+  setSponsorFilter(filter: string): void {
+    this.sponsorFilter = filter;
+    this.filterMatches();
+  }
+
+  hasApplied(match: MatchResult): boolean {
+    return this.student?.appliedJobIds?.includes(match.job.id) ?? false;
   }
 
   sortMatches(): void {
