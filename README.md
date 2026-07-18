@@ -5,6 +5,11 @@
   <p><em>Built for the CredX Hiring Challenge 2.0 (Problem Statement 1)</em></p>
 </div>
 
+## 🔗 Live Deployment
+
+* **Frontend (Vercel):** [https://tr-kappa-vert.vercel.app/dashboard](https://tr-kappa-vert.vercel.app/dashboard)
+* **Backend (Render):** [https://truerank.onrender.com](https://truerank.onrender.com)
+
 ---
 
 ## 📖 Overview
