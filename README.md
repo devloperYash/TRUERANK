@@ -23,6 +23,18 @@
 * **Live Backend REST API (Render):** [https://truerank.onrender.com](https://truerank.onrender.com)
 * **API Documentation (Swagger UI):** [https://truerank.onrender.com/swagger-ui/index.html](https://truerank.onrender.com/swagger-ui/index.html)
 
+### 👤 Default Demo Profile (Used for Initial Login)
+By default, the live frontend loads using the context of the primary test student:
+* **Default Student:** **Arjun Mehta** (ID: 1)
+  * **University:** Stanford University (CS)
+  * **GPA:** 3.85
+  * **Work Authorization:** F1-OPT (Requires Sponsorship)
+  * **Skills:** Java, Spring Boot, Angular, TypeScript, Python, React, SQL, Docker, Git, REST APIs
+  * **Strong Skills:** Java, Angular, Spring Boot
+
+*To test different scoring results, navigate to the **Profile** tab in the app and modify these parameters (e.g., change work auth to US Citizen, change GPA, or edit skills). The engine will recalculate all match scores instantly.*
+
+
 ---
 
 ## 📖 Project Vision & Overview
@@ -163,20 +175,9 @@ TrueRank/
 └── README.md                             # Global documentation
 ```
 
-## 👤 Demo Profiles & Test Accounts
+## 👤 Additional Demo Profiles for Testing
 
-To make evaluation easy, the database is pre-seeded with multiple student profiles representing different visas, GPAs, and skill sets.
-
-By default, the live frontend runs in the context of the primary test student:
-* **Default Student:** **Arjun Mehta** (ID: 1)
-  * **University:** Stanford University (CS)
-  * **GPA:** 3.85
-  * **Work Authorization:** F1-OPT (Requires Sponsorship)
-  * **Skills:** Java, Spring Boot, Angular, TypeScript, Python, React, SQL, Docker, Git, REST APIs
-  * **Strong Skills:** Java, Angular, Spring Boot
-
-### Additional Pre-seeded Students for Testing:
-You can test different scoring profiles by navigating to the **Profile** tab and changing the details (such as switching work authorization to US Citizen, reducing GPA, or changing skills). The engine will recalculate all match scores instantly.
+Apart from Arjun, you can also test the algorithm using these pre-seeded student profiles (which can be simulated by changing values in the **Profile** editor):
 
 1. **Emily Chen** (ID: 2) — MIT (Data Science)
    * GPA: 3.92 | US Citizen | Skills: Python, TensorFlow, PyTorch, SQL, Pandas
