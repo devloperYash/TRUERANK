@@ -1,9 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ThemeService, Theme } from '../../services/theme.service';
 
 /**
- * NavbarComponent — Fixed glassmorphism navigation with logo, links, and profile.
+ * NavbarComponent — Fixed glassmorphism navigation with logo, links,
+ * theme toggle, and profile.
  */
 @Component({
   selector: 'tr-navbar',
@@ -60,20 +62,47 @@ import { RouterModule } from '@angular/router';
           </a>
         </div>
 
-        <!-- Profile Avatar -->
-        <div class="nav-profile" id="nav-user">
-          <div class="nav-avatar">
-            <img
-              *ngIf="avatarUrl"
-              [src]="avatarUrl"
-              [alt]="userName"
-              class="avatar-img"
-            />
-            <span *ngIf="!avatarUrl" class="avatar-fallback">
-              {{ userName?.charAt(0)?.toUpperCase() || 'U' }}
-            </span>
+        <div class="nav-right">
+          <!-- Theme Toggle -->
+          <button class="theme-toggle" (click)="toggleTheme()" id="theme-toggle"
+                  [attr.aria-label]="currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
+            <div class="toggle-track">
+              <!-- Sun Icon -->
+              <svg class="toggle-icon sun-icon" [class.active]="currentTheme === 'light'"
+                   width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+              <!-- Moon Icon -->
+              <svg class="toggle-icon moon-icon" [class.active]="currentTheme === 'dark'"
+                   width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+              </svg>
+            </div>
+          </button>
+
+          <!-- Profile Avatar -->
+          <div class="nav-profile" id="nav-user">
+            <div class="nav-avatar">
+              <img
+                *ngIf="avatarUrl"
+                [src]="avatarUrl"
+                [alt]="userName"
+                class="avatar-img"
+              />
+              <span *ngIf="!avatarUrl" class="avatar-fallback">
+                {{ userName?.charAt(0)?.toUpperCase() || 'U' }}
+              </span>
+            </div>
+            <span class="nav-username">{{ userName || 'Student' }}</span>
           </div>
-          <span class="nav-username">{{ userName || 'Student' }}</span>
         </div>
       </div>
     </nav>
@@ -91,6 +120,10 @@ import { RouterModule } from '@angular/router';
       border-bottom: 1px solid var(--border-glass);
       z-index: 1000;
       transition: all 300ms ease;
+    }
+
+    :host-context([data-theme="light"]) .navbar {
+      background: rgba(255, 255, 255, 0.85);
     }
 
     .nav-inner {
@@ -155,6 +188,65 @@ import { RouterModule } from '@angular/router';
       background: rgba(124, 58, 237, 0.1);
     }
 
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 300ms ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--border-glass-hover);
+      background: var(--bg-surface-hover);
+      transform: rotate(15deg);
+    }
+
+    .toggle-track {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      width: 18px;
+      height: 18px;
+    }
+
+    .toggle-icon {
+      position: absolute;
+      transition: all 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      opacity: 0;
+      transform: scale(0.5) rotate(-90deg);
+      color: var(--text-secondary);
+    }
+
+    .toggle-icon.active {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+
+    .sun-icon.active {
+      color: #f59e0b;
+    }
+
+    .moon-icon.active {
+      color: #a78bfa;
+    }
+
+    /* Profile */
     .nav-profile {
       display: flex;
       align-items: center;
@@ -210,4 +302,16 @@ import { RouterModule } from '@angular/router';
 export class NavbarComponent {
   @Input() userName: string = '';
   @Input() avatarUrl: string = '';
+  currentTheme: Theme;
+
+  constructor(private themeService: ThemeService) {
+    this.currentTheme = this.themeService.currentTheme;
+    this.themeService.currentTheme$.subscribe(theme => {
+      this.currentTheme = theme;
+    });
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+  }
 }

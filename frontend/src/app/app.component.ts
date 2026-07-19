@@ -3,10 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { StudentService } from './services/student.service';
+import { ThemeService } from './services/theme.service';
 import { Student } from './models/student.model';
 
 /**
  * Root AppComponent — Shell with navbar and router outlet.
+ * Initializes theme service on startup.
  */
 @Component({
   selector: 'tr-root',
@@ -31,7 +33,10 @@ import { Student } from './models/student.model';
 export class AppComponent implements OnInit {
   student: Student | null = null;
 
-  constructor(private studentService: StudentService) {}
+  constructor(
+    private studentService: StudentService,
+    private themeService: ThemeService  // Initializes theme on construction
+  ) {}
 
   ngOnInit(): void {
     this.studentService.getById(1).subscribe({

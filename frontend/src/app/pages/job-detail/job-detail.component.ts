@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatchService } from '../../services/match.service';
 import { StudentService } from '../../services/student.service';
+import { AiCoachService, AiActionPlan } from '../../services/ai-coach.service';
 import { MatchResult } from '../../models/match.model';
 import { Student } from '../../models/student.model';
 import { JOB_TYPE_LABELS } from '../../models/job.model';
@@ -11,10 +12,12 @@ import { RadarChartComponent } from '../../components/radar-chart/radar-chart.co
 import { ScoreDnaStripComponent } from '../../components/score-dna-strip/score-dna-strip.component';
 import { ScoreBreakdownComponent } from '../../components/score-breakdown/score-breakdown.component';
 import { ConfidenceBadgeComponent } from '../../components/confidence-badge/confidence-badge.component';
+import { AiTipsPanelComponent } from '../../components/ai-tips-panel/ai-tips-panel.component';
+import { ActionPlanModalComponent } from '../../components/action-plan-modal/action-plan-modal.component';
 
 /**
  * JobDetailPage — Full job information with radar chart,
- * detailed score breakdown, and improvement tips.
+ * detailed score breakdown, improvement tips, and AI Career Coach.
  */
 @Component({
   selector: 'tr-job-detail',
@@ -22,7 +25,8 @@ import { ConfidenceBadgeComponent } from '../../components/confidence-badge/conf
   imports: [
     CommonModule, RouterModule,
     ScoreRingComponent, RadarChartComponent, ScoreDnaStripComponent,
-    ScoreBreakdownComponent, ConfidenceBadgeComponent
+    ScoreBreakdownComponent, ConfidenceBadgeComponent,
+    AiTipsPanelComponent, ActionPlanModalComponent
   ],
   template: `
     <div class="page-content">
@@ -139,6 +143,16 @@ import { ConfidenceBadgeComponent } from '../../components/confidence-badge/conf
                 [authScore]="match.authScore"
               ></tr-score-breakdown>
             </div>
+
+            <!-- AI Career Coach Panel -->
+            <div class="ai-coach-section animate-fade-in-up stagger-4">
+              <tr-ai-tips-panel
+                [studentId]="1"
+                [jobId]="match.job.id"
+                (requestPlan)="onRequestPlan()"
+                #aiTipsPanel
+              ></tr-ai-tips-panel>
+            </div>
           </div>
 
           <!-- Right Column: Radar + Quick Stats -->
@@ -201,6 +215,13 @@ import { ConfidenceBadgeComponent } from '../../components/confidence-badge/conf
         <a routerLink="/dashboard" class="btn btn-primary">Back to Dashboard</a>
       </div>
     </div>
+
+    <!-- Action Plan Modal -->
+    <tr-action-plan-modal
+      [isOpen]="showPlanModal"
+      [plan]="actionPlan"
+      (closeModal)="closePlanModal()"
+    ></tr-action-plan-modal>
   `,
   styles: [`
     .back-link {
@@ -391,15 +412,20 @@ import { ConfidenceBadgeComponent } from '../../components/confidence-badge/conf
   `]
 })
 export class JobDetailComponent implements OnInit {
+  @ViewChild('aiTipsPanel') aiTipsPanel!: AiTipsPanelComponent;
+
   match: MatchResult | null = null;
   student: Student | null = null;
   error: string = '';
   isApplying = false;
+  showPlanModal = false;
+  actionPlan: AiActionPlan | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private matchService: MatchService,
-    private studentService: StudentService
+    private studentService: StudentService,
+    private aiCoachService: AiCoachService
   ) {}
 
   ngOnInit(): void {
@@ -432,6 +458,29 @@ export class JobDetailComponent implements OnInit {
         this.isApplying = false;
       }
     });
+  }
+
+  /** Called when user confirms they want an action plan */
+  onRequestPlan(): void {
+    if (!this.match) return;
+    this.aiCoachService.generateActionPlan(1, this.match.job.id).subscribe({
+      next: (plan) => {
+        this.actionPlan = plan;
+        this.showPlanModal = true;
+        if (this.aiTipsPanel) {
+          this.aiTipsPanel.resetPlanLoading();
+        }
+      },
+      error: () => {
+        if (this.aiTipsPanel) {
+          this.aiTipsPanel.resetPlanLoading();
+        }
+      }
+    });
+  }
+
+  closePlanModal(): void {
+    this.showPlanModal = false;
   }
 
   getTypeLabel(type: string): string {
