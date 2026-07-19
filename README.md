@@ -3,6 +3,7 @@
 <div align="center">
   <img src="https://img.shields.io/badge/Angular-17.3-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular 17" />
   <img src="https://img.shields.io/badge/Spring%20Boot-3.2-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white" alt="Spring Boot 3" />
+  <img src="https://img.shields.io/badge/Gemini%20AI-2.0%20Flash-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Gemini AI" />
   <img src="https://img.shields.io/badge/H2-Database-003545?style=for-the-badge&logo=databricks&logoColor=white" alt="H2 DB" />
   <img src="https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
   <img src="https://img.shields.io/badge/Vercel-Hosted-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
@@ -64,11 +65,16 @@ Crucially, the platform breaks down the score down to the decimal point, explain
 - **Color-Coded Skill Pills:** Categorizes skills into matched (Green ✅), missing (Red ❌), and bonus (Purple ⭐).
 - **Actionable Tips:** Gives clear tips on how to improve the match score (e.g., *“Earn 8% by adding TypeScript to your profile”*).
 
-### 4. Interactive Side-by-Side Comparison
+### 4. 🤖 Gemini AI Career Coach (New!)
+- **AI Tips Panel:** Uses Google Gemini 2.0 Flash to analyze the match and provide hyper-personalized, actionable career advice (with typing animations).
+- **Action Plan Generator:** Generates a structured 4-week timeline with weekly milestones, specific tasks, and recommended resources to improve candidacy.
+- **Secure Backend Integration:** Prompts are engineered on the Spring Boot backend, keeping API keys secure. Fallbacks to rule-based tips if AI is unavailable.
+
+### 5. Interactive Side-by-Side Comparison
 - Compare 2 or 3 job offers side-by-side.
 - Highlights visual diffs in required skills, GPA requirements, salaries, and locations.
 
-### 5. Profile Customizer & Live Analytics
+### 6. Profile Customizer & Live Analytics
 - Complete editor for student profile details (Name, GPA, Graduation Year, Skills, Strong Skills, and Work Authorization).
 - Features a **Completeness Score Ring** that updates live as the student adds details.
 
@@ -99,10 +105,12 @@ $$\text{Total Score} = (\text{Skill Score} \times 0.40) + (\text{GPA Score} \tim
 
 ---
 
-## 🎨 Obsidian Design System (UI/UX)
+## 🎨 Obsidian Design System (UI/UX) & Theme Engine
 
 TrueRank implements the custom **Obsidian Design System**, configured directly using Vanilla CSS custom variables:
-- **Aesthetic:** Dark Glassmorphism with deep space violet, emerald green, and neon cyan accents.
+- **Aesthetic:** Glassmorphism with deep space violet, emerald green, and neon cyan accents.
+- **🌗 Light/Dark Mode:** Full theme engine with smooth 400ms transitions. Animated sun/moon toggle in the navbar.
+- **Persistence & Auto-Detection:** Automatically detects system preference (`prefers-color-scheme`) and persists user choice via `localStorage`.
 - **Effects:** Backdrop filters (`blur(16px)`), micro-interactions on hover, and smooth scaling animations.
 - **Responsiveness:** Fluid grid layout adapting seamlessly from wide-screen desktops to mobile viewports.
 
@@ -206,6 +214,9 @@ On application startup, `DataInitializer.java` seeds **5 realistic students** (r
 ### 1. Launch the Backend
 ```bash
 cd backend
+# Set your Gemini API key as an environment variable (Required for AI features)
+export GEMINI_API_KEY="your_api_key_here"
+
 mvn clean package -DskipTests
 mvn spring-boot:run
 ```
@@ -229,7 +240,8 @@ The backend contains a custom multi-stage `Dockerfile` to handle dependencies an
 1. Create a new **Web Service** on Render.
 2. Link your repository and set the Root Directory to `backend`.
 3. Set the Runtime to **Docker**.
-4. Click deploy. Render will automatically build the image and serve the API.
+4. **Crucial:** Go to the Environment tab and add your `GEMINI_API_KEY` variable.
+5. Click deploy. Render will automatically build the image and serve the API.
 
 ### Frontend (Vercel)
 1. Add a new project on Vercel and link your repository.
